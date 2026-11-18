@@ -1,7 +1,7 @@
 # Kickoff Kits — PrestaShop E-shop
 
 An online football-jersey store built on **PrestaShop 9.2.1** with a fully custom animated dark theme.
-It was a group project (group g15) for the **E-services for Business Management** course at Vilnius University Šiauliai Academy, made by Sabbir Hossain Akanda and Md Ashraful.
+It was a group project (group g15) for the **E-services for Business Management** course at Vilnius University Šiauliai Academy, made by Sabbir Hossain Akanda.
 
 ![Homepage](screenshots/1-homepage-hero.jpg)
 
