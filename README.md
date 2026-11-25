@@ -36,7 +36,7 @@ The shop has an AI agent built in: a **"Ask Kit Assistant"** chat widget that he
 | `apply_discount` | simulated action | Validate an existing code (e.g. `KICKOFF10`); it cannot invent codes |
 | `get_order_status` | read, protected | Needs the order reference **and** the matching email, otherwise "Access denied" |
 
-![Kit Assistant on the live shop](ai-assistant/evidence/live_scenario1_success.jpg)
+![Kit Assistant on the live shop](ai-assistant/evidence/kit_assistant_1_success.jpg)
 
 **How it's built**
 - **Live website:** [`ai-assistant/website/kk-assistant/chat.php`](ai-assistant/website/kk-assistant/chat.php) is a server-side PHP endpoint that runs the agent loop. The widget in `theme/custom.js` posts messages to it, so **the API key stays on the server** (`config.php`, blocked by `.htaccess` and never committed).
@@ -53,7 +53,7 @@ The shop has an AI agent built in: a **"Ask Kit Assistant"** chat widget that he
 
 | Vague request | Restricted request |
 |---|---|
-| ![Clarification](ai-assistant/evidence/live_scenario2_clarification.jpg) | ![Restricted](ai-assistant/evidence/live_scenario3_restricted.jpg) |
+| ![Clarification](ai-assistant/evidence/kit_assistant_2_clarification.jpg) | ![Restricted](ai-assistant/evidence/kit_assistant_3_restricted.jpg) |
 
 Under each answer, the chat shows small labels for the tools the AI used: **✓ blue** reads shop data, **🛒 yellow** is a simulated action, **✕ red** means the request was denied. Customers never see raw code or JSON.
 
