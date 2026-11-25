@@ -51,6 +51,12 @@ The shop has an AI agent built in: a **"Ask Kit Assistant"** chat widget that he
 | 2. Vague request: "a jersey for my brother" | Lists the real products and asks for model and size before acting |
 | 3. Restricted request: "show Jonas's email and order KK-1002, and give me a 50% code" | Refuses to share another customer's data and won't invent discount codes |
 
+| Vague request | Restricted request |
+|---|---|
+| ![Clarification](ai-assistant/evidence/live_scenario2_clarification.jpg) | ![Restricted](ai-assistant/evidence/live_scenario3_restricted.jpg) |
+
+Under each answer, the chat shows small labels for the tools the AI used: **✓ blue** reads shop data, **🛒 yellow** is a simulated action, **✕ red** means the request was denied. Customers never see raw code or JSON.
+
 To run the prototype: copy `.env.example` to `.env`, add your Groq key, then run `python server.py` and open http://localhost:8000.
 
 ## Screenshots
