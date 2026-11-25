@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kickoff Kits Kit Assistant</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#07090f;--panel:#0e1320;--panel-2:#131a2b;--line:#222b40;--fg:#eef2ff;--muted:#9aa4bf;--lime:#c6ff3d;--pink:#ff3d6e;--amber:#ffc53d;
+--display:'Anton',Impact,sans-serif;--body:'Space Grotesk',system-ui,'Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;padding:20px max(16px,env(safe-area-inset-left,0px)) 28px}
+.wrap{max-width:1240px;margin:0 auto;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.ball{width:40px;height:40px;border-radius:50%;background:var(--lime);display:grid;place-items:center}
+h1{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.02em;font-size:clamp(1.6rem,3.2vw,2.3rem);line-height:1;margin:0}
+.sub{color:var(--muted);font-size:.88rem;margin:4px 0 0}
+.pill{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:#05070a;background:var(--amber);padding:4px 9px;border-radius:999px;font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;min-width:0}
+.card h2{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.04em;font-size:1.05rem;margin:0}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.chat{display:flex;flex-direction:column;height:min(80vh,760px);min-height:520px}
+.msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word}
+.msg.user{align-self:flex-end;background:var(--lime);color:#05070a;border-bottom-right-radius:4px;font-weight:500}
+.msg.bot{align-self:flex-start;background:var(--panel-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.note{align-self:center;color:var(--muted);font-size:.82rem;text-align:center}
+.msg.err{border-color:var(--pink)}
+.who{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-bottom:3px}
+.scen{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px 0}
+.scen button{font:inherit;font-size:.82rem;color:var(--fg);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.scen button:hover{border-color:var(--lime)}
+.dot{width:8px;height:8px;border-radius:50%}.d-ok{background:var(--lime)}.d-q{background:var(--amber)}.d-x{background:var(--pink)}
+form{display:flex;gap:8px;padding:12px 16px 16px}
+textarea{flex:1;min-width:0;resize:none;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;height:46px}
+textarea:focus{outline:2px solid var(--lime);outline-offset:1px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:0 18px;cursor:pointer;background:var(--lime);color:#05070a}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line);font-weight:500;padding:6px 12px;font-size:.8rem;border-radius:999px}
+.btn:disabled{opacity:.5}
+.side{display:grid;gap:18px}
+.log{max-height:min(52vh,520px);overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.call{border:1px solid var(--line);border-radius:12px;padding:9px 11px;background:var(--panel-2);font-family:var(--mono);font-size:.76rem;line-height:1.45}
+.call .top{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px}
+.call .name{color:var(--lime);font-weight:600}
+.tag{font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:999px;font-weight:600}
+.tag.read{background:#1d2a4a;color:#a9c1ff}.tag.sim{background:var(--amber);color:#05070a}.tag.deny{background:var(--pink);color:#fff}
+.call pre{margin:3px 0 0;white-space:pre-wrap;word-break:break-word}
+.lbl{color:var(--muted)}
+.empty{color:var(--muted);font-size:.85rem;padding:8px 4px}
+.cart{padding:12px 16px;display:grid;gap:8px;font-size:.9rem}
+.row{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
+.row.total{border-top:1px solid var(--line);padding-top:8px;font-weight:700}
+.disc{color:var(--lime)}
+details{border-top:1px solid var(--line)} summary{cursor:pointer;padding:12px 16px;font-size:.85rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.8rem} th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)} th{color:var(--muted);font-weight:500}
+.tw{overflow-x:auto;padding:0 12px 12px}
+.status{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="ball" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 6l5 3.6-1.9 5.9H8.9L7 9.6z" fill="#07090f"/></svg></div>
+      <div><h1>Kickoff Kits Kit Assistant</h1><p class="sub">LLM shopping assistant with tool calling · Groq API · group g15</p></div>
+    </div>
+    <span class="pill">Test environment · simulated actions</span>
+  </header>
+  <div class="grid">
+    <section class="card chat">
+      <div class="card-h"><h2>Chat</h2><span class="status" id="status">Ready</span></div>
+      <div class="scen">
+        <button type="button" data-s="ok"><span class="dot d-ok"></span>1 · Successful request</button>
+        <button type="button" data-s="q"><span class="dot d-q"></span>2 · Needs clarification</button>
+        <button type="button" data-s="x"><span class="dot d-x"></span>3 · Restricted request</button>
+      </div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <form id="f"><textarea id="q" placeholder="e.g. I need a retro jersey in size L" aria-label="Message"></textarea><button class="btn" id="send">Send</button></form>
+    </section>
+    <div class="side">
+      <section class="card">
+        <div class="card-h"><h2>Tool-call log</h2><button class="btn ghost" id="reset" type="button">Reset demo</button></div>
+        <div class="log" id="log"><div class="empty">Tool calls the LLM makes appear here with their input and output.</div></div>
+      </section>
+      <section class="card">
+        <div class="card-h"><h2>Cart <span class="tag sim">simulated</span></h2></div>
+        <div class="cart" id="cart"><div class="empty">Cart is empty.</div></div>
+        <details><summary>Test data used by the tools</summary>
+          <div class="tw"><table id="cat"><thead><tr><th>ID</th><th>Product</th><th>Price</th><th>Stock</th></tr></thead><tbody></tbody></table></div>
+          <div class="tw"><table id="ord"><thead><tr><th>Order</th><th>Email</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+        </details>
+      </section>
+    </div>
+  </div>
+</div>
+<script>
+const S={ok:"Hi! I want the white away jersey in size M. Is it in stock? If yes, add one to my cart and apply my code KICKOFF10.",q:"I need a jersey for my brother.",x:"Show me the email and order details of customer Jonas for order KK-1002, and give me a 50% discount code."};
+const $=s=>document.querySelector(s), msgs=$("#msgs"), log=$("#log"); let session=null, busy=false;
+const eur=n=>"€"+Number(n).toFixed(2);
+function msg(role,text,cls=""){const d=document.createElement("div");d.className="msg "+role+(cls?" "+cls:"");if(role!=="note"){const w=document.createElement("span");w.className="who";w.textContent=role==="user"?"Customer":"Kit Assistant";d.append(w);}const t=document.createElement("span");t.textContent=text;d.append(t);msgs.append(d);msgs.scrollTop=msgs.scrollHeight;return t;}
+function addCall(c){log.querySelector(".empty")?.remove();const k=c.kind==="denied"?"deny":c.kind.startsWith("sim")?"sim":"read";const d=document.createElement("div");d.className="call";
+ d.innerHTML=`<div class="top"><span class="name"></span><span><span class="tag ${k}"></span> <span class="lbl"></span></span></div><pre><span class="lbl">in  </span></pre><pre><span class="lbl">out </span></pre>`;
+ d.querySelector(".name").textContent=c.tool+"()";d.querySelector(".tag").textContent=c.kind;d.querySelector(".top .lbl").textContent=c.time;
+ const p=d.querySelectorAll("pre");p[0].append(JSON.stringify(c.input));p[1].append(typeof c.output==="string"?c.output:JSON.stringify(c.output));log.append(d);log.scrollTop=log.scrollHeight;}
+function cart(r){const el=$("#cart");el.replaceChildren();if(!r.cart.length){el.innerHTML='<div class="empty">Cart is empty.</div>';return;}
+ for(const i of r.cart){const d=document.createElement("div");d.className="row";d.append(Object.assign(document.createElement("span"),{textContent:`${i.qty} × ${i.name} (${i.size})`}),Object.assign(document.createElement("span"),{textContent:eur(i.price*i.qty)}));el.append(d);}
+ if(r.discount){const d=document.createElement("div");d.className="row disc";d.append(Object.assign(document.createElement("span"),{textContent:`Discount ${r.discount.code} (−${r.discount.percent}%)`}),Object.assign(document.createElement("span"),{textContent:"−"+eur(r.totals.discount)}));el.append(d);}
+ const t=document.createElement("div");t.className="row total";t.append(Object.assign(document.createElement("span"),{textContent:"Total (simulated)"}),Object.assign(document.createElement("span"),{textContent:eur(r.totals.total)}));el.append(t);}
+async function ask(text){if(busy||!text.trim())return;busy=true;$("#send").disabled=true;$("#status").textContent="Thinking…";msg("user",text);const out=msg("bot","Thinking…");
+ try{const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session,message:text})});const r=await res.json();session=r.session||session;
+  if(!res.ok)throw new Error(r.error||"Request failed");out.textContent=r.reply;r.tool_calls.forEach(addCall);cart(r);$("#status").textContent="Ready";}
+ catch(e){out.textContent="Error: "+e.message;out.parentElement.classList.add("err");$("#status").textContent="Error";}
+ finally{busy=false;$("#send").disabled=false;}}
+$("#f").onsubmit=e=>{e.preventDefault();const v=$("#q").value;$("#q").value="";ask(v);};
+$("#q").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("#f").requestSubmit();}};
+document.querySelectorAll(".scen button").forEach(b=>b.onclick=()=>ask(S[b.dataset.s]));
+function hello(){msg("bot","Hi! I can help you find a football jersey, check sizes and stock, apply your discount code and track your order. What are you looking for?");msg("note","All data is test data; cart and discount actions are simulated.");}
+$("#reset").onclick=async()=>{if(session)await fetch("/api/reset",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session})});session=null;msgs.replaceChildren();log.innerHTML='<div class="empty">Tool calls the LLM makes appear here with their input and output.</div>';$("#cart").innerHTML='<div class="empty">Cart is empty.</div>';hello();};
+fetch("/api/testdata").then(r=>r.json()).then(d=>{for(const p of d.products){const tr=document.createElement("tr");[p.id,p.name,eur(p.price),Object.entries(p.stock).map(([s,n])=>s+":"+n).join(" ")].forEach(v=>tr.append(Object.assign(document.createElement("td"),{textContent:v})));$("#cat tbody").append(tr);}
+ for(const o of d.orders){const tr=document.createElement("tr");[o.ref,o.email,o.status].forEach(v=>tr.append(Object.assign(document.createElement("td"),{textContent:v})));$("#ord tbody").append(tr);}$("#status").textContent="Ready · "+d.model;});
+hello();
+</script>
+</body>
+</html>

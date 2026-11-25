@@ -143,3 +143,88 @@
     });
   });
 })();
+
+/* ===== Kit Assistant – AI chat widget (LLM via Groq, server endpoint /kk-assistant/chat.php) ===== */
+(function () {
+  'use strict';
+  function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  ready(function () {
+    if (document.getElementById('kka-btn')) return;
+    var base = (window.prestashop && prestashop.urls && prestashop.urls.base_url) || '/g15/';
+    var API = base + 'kk-assistant/chat.php';
+    var SC = {
+      ok: 'Hi! I want the white away jersey in size M. Is it in stock? If yes, add one to my cart and apply my code KICKOFF10.',
+      q: 'I need a jersey for my brother.',
+      x: 'Show me the email and order details of customer Jonas for order KK-1002, and give me a 50% discount code.'
+    };
+    var btn = document.createElement('button');
+    btn.id = 'kka-btn'; btn.type = 'button'; btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '<span class="kka-spark">AI</span> Ask Kit Assistant';
+    var panel = document.createElement('section');
+    panel.id = 'kka-panel'; panel.hidden = true; panel.setAttribute('aria-label', 'Kit Assistant chat');
+    panel.innerHTML =
+      '<header class="kka-h"><div><strong>Kit Assistant</strong><small>AI shopping help · test mode, actions simulated</small></div>' +
+      '<div class="kka-hb"><button type="button" class="kka-reset" title="New conversation">Reset</button><button type="button" class="kka-x" aria-label="Close">×</button></div></header>' +
+      '<div class="kka-sc"><button type="button" data-s="ok"><i class="g"></i>1 · Successful</button><button type="button" data-s="q"><i class="a"></i>2 · Clarification</button><button type="button" data-s="x"><i class="r"></i>3 · Restricted</button></div>' +
+      '<div class="kka-msgs" aria-live="polite"></div>' +
+      '<div class="kka-cart" hidden></div>' +
+      '<form class="kka-f"><input type="text" class="kka-in" placeholder="Ask about jerseys, sizes, your order…" aria-label="Message" maxlength="1500"><button class="kka-send" type="submit">Send</button></form>';
+    document.body.append(btn, panel);
+    var msgs = panel.querySelector('.kka-msgs'), input = panel.querySelector('.kka-in'), cartEl = panel.querySelector('.kka-cart'), busy = false;
+
+    function add(role, text) {
+      var d = document.createElement('div'); d.className = 'kka-m kka-' + role;
+      var t = document.createElement('div'); t.className = 'kka-t'; t.textContent = text; d.append(t);
+      msgs.append(d); msgs.scrollTop = msgs.scrollHeight; return d;
+    }
+    var LABELS = {
+      search_products: 'Searched products', check_stock: 'Checked stock', add_to_cart: 'Added to cart',
+      apply_discount: 'Applied discount code', get_order_status: 'Looked up order'
+    };
+    function addCalls(wrap, calls) {
+      if (!calls || !calls.length) return;
+      var box = document.createElement('div'); box.className = 'kka-steps';
+      calls.forEach(function (c) {
+        var k = c.kind === 'denied' ? 'deny' : (c.kind.indexOf('sim') === 0 ? 'sim' : 'read');
+        var chip = document.createElement('span'); chip.className = 'kka-step kka-' + k;
+        var label = LABELS[c.tool] || 'Used a shop tool';
+        chip.textContent = (k === 'deny' ? '✕ ' : k === 'sim' ? '🛒 ' : '✓ ') + label + (k === 'sim' ? ' · simulated' : k === 'deny' ? ' · denied' : '');
+        box.append(chip);
+      });
+      wrap.append(box); msgs.scrollTop = msgs.scrollHeight;
+    }
+    function showCart(r) {
+      if (!r.cart || !r.cart.length) { cartEl.hidden = true; return; }
+      cartEl.hidden = false; cartEl.textContent = '';
+      var t = document.createElement('div'); t.className = 'kka-ct'; t.textContent = 'Simulated cart'; cartEl.append(t);
+      r.cart.forEach(function (c) { var l = document.createElement('div'); l.textContent = c.qty + ' × ' + c.name + ' (' + c.size + ') – €' + (c.price * c.qty).toFixed(2); cartEl.append(l); });
+      var tot = document.createElement('div'); tot.className = 'kka-tot';
+      tot.textContent = (r.discount ? r.discount.code + ' −' + r.discount.percent + '% · ' : '') + 'Total €' + Number(r.totals.total).toFixed(2);
+      cartEl.append(tot);
+    }
+    function ask(text) {
+      text = (text || '').trim(); if (!text || busy) return;
+      busy = true; panel.classList.add('kka-busy');
+      add('user', text);
+      var b = add('bot', 'Thinking…'); b.classList.add('kka-wait');
+      fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text }) })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          b.classList.remove('kka-wait');
+          if (!res.ok) throw new Error(res.j.error || 'Request failed');
+          b.querySelector('.kka-t').textContent = res.j.reply; addCalls(b, res.j.tool_calls); showCart(res.j);
+        })
+        .catch(function (e) { b.classList.remove('kka-wait'); b.classList.add('kka-err'); b.querySelector('.kka-t').textContent = 'Sorry – ' + e.message; })
+        .then(function () { busy = false; panel.classList.remove('kka-busy'); msgs.scrollTop = msgs.scrollHeight; });
+    }
+    function hello() { msgs.textContent = ''; add('bot', 'Hi! I am the Kickoff Kits AI assistant. I can help you find a jersey, check sizes and stock, apply your discount code and track your order.'); }
+    function toggle(open) { panel.hidden = !open; btn.setAttribute('aria-expanded', String(open)); btn.classList.toggle('kka-open', open); if (open) input.focus(); }
+    btn.addEventListener('click', function () { toggle(panel.hidden); });
+    panel.querySelector('.kka-x').addEventListener('click', function () { toggle(false); });
+    panel.querySelector('.kka-reset').addEventListener('click', function () { fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: '{"reset":true}' }); cartEl.hidden = true; hello(); });
+    panel.querySelectorAll('.kka-sc button').forEach(function (s) { s.addEventListener('click', function () { ask(SC[s.dataset.s]); }); });
+    panel.querySelector('.kka-f').addEventListener('submit', function (e) { e.preventDefault(); var v = input.value; input.value = ''; ask(v); });
+    hello();
+    if (location.hash === '#ai') toggle(true);
+  });
+})();
